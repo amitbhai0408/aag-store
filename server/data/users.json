@@ -1,0 +1,165 @@
+{
+  "java:arupmc": {
+    "name": "ArupMC",
+    "edition": "java",
+    "firstLogin": "2026-11-04T18:26:47.133Z",
+    "logins": 1,
+    "afkMinutes": 1,
+    "lastAfkAt": 1793816812229,
+    "pending": [],
+    "redeemedCount": 1,
+    "lastLogin": "2026-11-04T18:26:47.133Z",
+    "lastSeen": "2026-11-04T18:26:52.229Z",
+    "linkStarts": {},
+    "lastClaim": {
+      "link1": 1793816833652
+    }
+  },
+  "java:testplayer": {
+    "name": "TestPlayer",
+    "edition": "java",
+    "firstLogin": "2026-11-04T19:00:08.835Z",
+    "logins": 1,
+    "afkMinutes": 1,
+    "lastAfkAt": 1793818808841,
+    "pending": [],
+    "redeemedCount": 0,
+    "lastLogin": "2026-11-04T19:00:08.835Z",
+    "lastSeen": "2026-11-04T19:00:08.841Z",
+    "sessions": {},
+    "lastClaim": {
+      "link1": 1793952927291
+    }
+  },
+  "java:amit": {
+    "name": "amit",
+    "edition": "java",
+    "firstLogin": "2026-11-04T19:02:20.814Z",
+    "logins": 1,
+    "afkMinutes": 0,
+    "lastAfkAt": 0,
+    "pending": [],
+    "redeemedCount": 0,
+    "lastLogin": "2026-11-04T19:02:20.814Z",
+    "linkStarts": {
+      "link1": 1793818947332
+    }
+  },
+  "java:aagop_": {
+    "name": "AAGOP_",
+    "edition": "java",
+    "firstLogin": "2026-11-04T19:28:18.582Z",
+    "logins": 6,
+    "afkMinutes": 48,
+    "lastAfkAt": 1793956398735,
+    "pending": [],
+    "redeemedCount": 8,
+    "lastLogin": "2026-11-06T08:07:40.559Z",
+    "lastClaim": {
+      "link1": 1793954952753
+    },
+    "linkStarts": {},
+    "sessions": {
+      "st_7f8dd3271893ad5c15565b03a3bf3c93": {
+        "linkId": "link1",
+        "totalSteps": 1,
+        "currentStep": 1,
+        "stepsCompleted": 0,
+        "startedAt": 1793951995922,
+        "stepStartedAt": 1793951995922
+      },
+      "st_f296d4bd8e56a0994b6a4c9f05ec0fad": {
+        "linkId": "link2",
+        "totalSteps": 2,
+        "currentStep": 1,
+        "stepsCompleted": 0,
+        "startedAt": 1793952893830,
+        "stepStartedAt": 1793952893830
+      },
+      "st_dfb5b9debc02b99aae709292d4c81390": {
+        "linkId": "link2",
+        "totalSteps": 2,
+        "currentStep": 1,
+        "stepsCompleted": 0,
+        "startedAt": 1793956452956,
+        "stepStartedAt": 1793956452956
+      }
+    },
+    "lastSeen": 1793956834151
+  },
+  "java:testpending": {
+    "name": "TestPending",
+    "edition": "java",
+    "firstLogin": "2026-11-06T06:33:50.355Z",
+    "logins": 1,
+    "afkMinutes": 1,
+    "lastAfkAt": 1793946830372,
+    "pending": [],
+    "redeemedCount": 0,
+    "lastLogin": "2026-11-06T06:33:50.355Z",
+    "lastSeen": "2026-11-06T06:33:50.372Z"
+  },
+  "java:testafk": {
+    "name": "TestAFK",
+    "edition": "java",
+    "firstLogin": "2026-11-06T06:34:52.102Z",
+    "logins": 1,
+    "afkMinutes": 1,
+    "lastAfkAt": 1793946892119,
+    "pending": [],
+    "redeemedCount": 0,
+    "lastLogin": "2026-11-06T06:34:52.102Z",
+    "lastSeen": "2026-11-06T06:34:52.120Z"
+  },
+  "bedrock:aagop_": {
+    "name": "AAGOP_",
+    "edition": "bedrock",
+    "firstLogin": "2026-11-06T07:49:09.577Z",
+    "logins": 1,
+    "afkMinutes": 0,
+    "lastAfkAt": 0,
+    "pending": [],
+    "redeemedCount": 0,
+    "lastLogin": "2026-11-06T07:49:09.577Z",
+    "lastClaim": {
+      "link1": 1793952909824
+    }
+  },
+  "java:test_arup": {
+    "name": "test_arup",
+    "edition": "java",
+    "created": 1793956153315,
+    "lastSeen": 1793956153315,
+    "pending": []
+  },
+  "bedrock:slateyak7535733": {
+    "name": "SlateYak7535733",
+    "edition": "bedrock",
+    "firstLogin": "2026-11-06T12:50:30.293Z",
+    "logins": 1,
+    "afkMinutes": 128,
+    "lastAfkAt": 1793983506685,
+    "pending": [],
+    "redeemedCount": 0,
+    "lastLogin": "2026-11-06T12:50:30.293Z",
+    "lastSeen": "2026-11-06T16:45:06.685Z"
+  },
+  "bedrock:.slateyak7535733": {
+    "name": ".SlateYak7535733",
+    "edition": "bedrock",
+    "created": 1793969516939,
+    "lastSeen": 1793969516939,
+    "pending": []
+  },
+  "bedrock:amit": {
+    "name": "Amit",
+    "edition": "bedrock",
+    "firstLogin": "2026-11-06T13:12:27.541Z",
+    "logins": 2,
+    "afkMinutes": 0,
+    "lastAfkAt": 0,
+    "pending": [],
+    "redeemedCount": 0,
+    "lastLogin": "2026-11-06T13:12:49.402Z"
+  }
+}

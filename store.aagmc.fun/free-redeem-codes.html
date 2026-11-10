@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAG SMP | Free Redeem Codes</title>
+<link rel="shortcut icon" href="../website.aagmc.fun/bcGCsev.png">
+<link rel="stylesheet" href="rewards.css">
+<script src="config.js"></script>
+<script src="login.js"></script>
+<script src="ads.js" defer></script>
+<script>AAG.requireLogin();</script>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <a class="chip" href="/"><img src="../website.aagmc.fun/logo.png" alt="AAG MC"></a>
+    <a class="pill" href="rewards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Free Rewards</a>
+  </div>
+
+  <div class="banner">
+    <div class="txt"><h1>Free Redeem Codes</h1><p>Open a link, get a code, redeem your reward.</p></div>
+    <img src="../website.aagmc.fun/codes.png" alt="">
+  </div>
+
+  <div class="ad-top-wrapper" style="margin: 0 auto 24px; max-width: 728px; display: flex; justify-content: center;">
+    <div class="ad-slot ad-banner" data-ad="bottom" style="margin-bottom: 0;"><span>Ad space &middot; 728 &times; 90</span></div>
+  </div>
+
+  <div class="cols">
+      <div>
+        <div class="card" id="code-links-card" style="text-align: center; padding: 32px 20px;">
+          <div style="font-size: 40px; margin-bottom: 10px;">&#128736;&#65039;</div>
+          <h3 style="font-size: 21px; font-weight: 800; color: #f59e0b; margin-bottom: 8px;">Code Links Under Maintenance</h3>
+          <p class="lead" style="margin-bottom: 16px; color: #a1a1aa; font-size: 14.5px; line-height: 1.6; max-width: 440px; margin-left: auto; margin-right: auto;">
+            Free Redeem Code links are temporarily offline while we upgrade our rewards system. We will be back soon with bigger rewards!
+          </p>
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #f59e0b; padding: 8px 18px; border-radius: 999px; font-size: 13.5px; font-weight: 700; margin-bottom: 22px;">
+            <span>&#9889;</span> System Upgrading &middot; Back Soon!
+          </div>
+          <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+            <a class="btn" href="/store" style="background: linear-gradient(135deg, #00F0FF, #0077FF); color: #000; font-weight: 700;">Instant Shard Packs in Store</a>
+            <a class="btn dark" href="afk-zone">Earn Shards in AFK Zone</a>
+          </div>
+          <div class="store-nudge" style="text-align: center; font-size: 13px; color: #888; background: #18191f; border: 1px solid #2a2d36; border-radius: 12px; padding: 10px 14px;">
+            Need help or have questions? <a href="https://discord.gg/bvVstrXWDC" target="_blank" style="color: #5865F2; font-weight: 700; text-decoration: underline;">Ask on our Discord</a>
+          </div>
+        </div>
+        <div class="card" id="redeem" style="margin-bottom:0">
+          <h3>Redeem your code</h3>
+          <form class="redeem" id="redeem-form" autocomplete="off">
+            <input id="code" type="text" maxlength="14" placeholder="AAG-XXXX-XXXX" spellcheck="false" autocapitalize="characters">
+            <button class="btn" type="submit" id="redeem-btn">Redeem</button>
+          </form>
+          <div class="res" id="redeem-res" role="status"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card help">
+        <h3>Need help?</h3>
+        <p>Stuck or have a question? Ask our team on Discord.</p>
+        <a class="btn" href="https://discord.gg/bvVstrXWDC" target="_blank" rel="noopener">Join our Discord</a>
+      </div>
+        <div class="card" style="margin-bottom:0">
+          <h3>How it works</h3>
+          <ol class="steps"><li><span class="n">1</span><div>Open a Code Link below.</div></li><li><span class="n">2</span><div>Finish the steps on the page.</div></li><li><span class="n">3</span><div>Copy the code you get at the end.</div></li><li><span class="n">4</span><div>Come back here, paste it and press <strong>Redeem</strong>.</div></li></ol>
+        </div>
+      </div>
+    </div>
+
+  <div class="more">
+    <h3>More free rewards</h3>
+    <div class="mini"><a href="afk-zone"><img src="../website.aagmc.fun/afk.png" alt=""><b>AFK Zone (Earn Shards)</b></a></div>
+  </div>
+</div>
+<aside class="rail rail-l"><div class="ad-slot ad-sky" data-ad="rail-left"><span>Ad space<br>160 &times; 600</span></div></aside>
+<aside class="rail rail-r"><div class="ad-slot ad-sky" data-ad="rail-right"><span>Ad space<br>160 &times; 600</span></div></aside>
+<div class="ad-bottom"><div class="ad-slot ad-banner" data-ad="bottom"><span>Ad space &middot; 728 &times; 90</span></div></div>
+<footer>aagmc.fun &middot; Not associated with Mojang or Microsoft</footer>
+<script>
+(function () {
+  // ===== Code Links Under Maintenance =====
+  // Links are disabled while the reward system is being upgraded.
+
+  // ===== Redeem existing codes =====
+  var form = document.getElementById('redeem-form'), input = document.getElementById('code'),
+      btn = document.getElementById('redeem-btn'), res = document.getElementById('redeem-res');
+  if (input) {
+    input.addEventListener('input', function () { input.value = input.value.toUpperCase(); });
+  }
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var code = input.value.trim();
+      if (!code) { res.className = 'res err'; res.textContent = 'Please enter your code.'; return; }
+      btn.disabled = true; res.className = 'res'; res.textContent = 'Checking...';
+      AAG.rewards.redeem(code).then(function (r) {
+        btn.disabled = false;
+        if (r && r.ok) {
+          res.className = 'res ok';
+          res.textContent = 'Redeemed! Reward: ' + ((r.reward && r.reward.label) || 'Reward');
+          input.value = '';
+        } else { res.className = 'res err'; res.textContent = (r && r.error) || 'Something went wrong.'; }
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

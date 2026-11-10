@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAG SMP | AFK Zone</title>
+<link rel="shortcut icon" href="../website.aagmc.fun/bcGCsev.png">
+<link rel="stylesheet" href="rewards.css">
+<style>
+  /* Concurrency Blocking Overlays */
+  .afk-overlay {
+    position: fixed; inset: 0; z-index: 9999999;
+    background: rgba(5, 7, 14, 0.94);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    animation: afkFade 0.25s ease-out;
+    font-family: "proxima-nova", Arial, sans-serif;
+  }
+  @keyframes afkFade { from { opacity: 0; } to { opacity: 1; } }
+  .afk-modal-card {
+    background: #141722; border: 1.5px solid #f59e0b; border-radius: 24px;
+    max-width: 480px; width: 100%; padding: 34px 28px; text-align: center;
+    box-shadow: 0 25px 65px rgba(0,0,0,0.85), 0 0 35px rgba(245, 158, 11, 0.25);
+    animation: afkPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .afk-modal-card.danger {
+    border-color: #ef4444;
+    box-shadow: 0 25px 65px rgba(0,0,0,0.85), 0 0 35px rgba(239, 68, 68, 0.25);
+  }
+  @keyframes afkPop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  .afk-modal-icon {
+    font-size: 46px; margin-bottom: 12px;
+  }
+  .afk-modal-card h2 {
+    font-size: 22px; font-weight: 900; color: #fff; margin: 0 0 10px;
+  }
+  .afk-modal-card p {
+    font-size: 14.5px; color: #94a3b8; line-height: 1.6; margin: 0 0 20px;
+  }
+  .afk-modal-btn {
+    width: 100%; border: 0; background: linear-gradient(135deg, #0a6cff, #00F0FF);
+    color: #fff; font-size: 16px; font-weight: 800; padding: 14px 20px;
+    border-radius: 14px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 18px rgba(0, 240, 255, 0.35);
+  }
+  .afk-modal-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0, 240, 255, 0.5); }
+</style>
+<script src="config.js"></script>
+<script src="login.js"></script>
+<script src="ads.js" defer></script>
+<script>AAG.requireLogin();</script>
+</head>
+<body>
+<div class="page wide">
+  <div class="topbar">
+    <a class="chip" href="/"><img src="../website.aagmc.fun/logo.png" alt="AAG MC"></a>
+    <a class="pill" href="rewards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Free Rewards</a>
+  </div>
+
+  <div class="banner">
+    <div class="txt"><h1>AFK Zone</h1><p>Earn rewards just for staying online &mdash; 1 session per IP &amp; Tab.</p></div>
+    <img src="../website.aagmc.fun/afk.png" alt="">
+  </div>
+
+  <div class="afk-layout">
+      <aside class="ads ads-left">
+        <!-- AD SLOT LEFT (160x600) -->
+        <div class="ad-slot ad-sky" data-ad="afk-left" id="ad-left"><span>Ad space<br>160 &times; 600</span></div>
+      </aside>
+
+      <div class="afk-main">
+        <div class="card timer-card">
+          <div class="ring">
+            <svg viewBox="0 0 140 140" width="150" height="150" aria-hidden="true">
+              <circle cx="70" cy="70" r="60" fill="none" stroke="#2c2c2c" stroke-width="12"/>
+              <circle id="ringfill" cx="70" cy="70" r="60" fill="none" stroke="#0a6cff" stroke-width="12" stroke-linecap="round" transform="rotate(-90 70 70)" stroke-dasharray="376.99" stroke-dashoffset="376.99"/>
+            </svg>
+            <div class="ring-txt"><b id="clock">01:00</b><small>next minute</small></div>
+          </div>
+          <div class="timer-info">
+            <div class="status" id="status"><i></i><span>Active &mdash; earning</span></div>
+            <h3>Stay on this page to keep earning</h3>
+            <p>A timer runs every 1 minute. Rewards are given in-game while you stay here.</p>
+            <div class="stats">
+              <div><b id="mins">0</b><span>Minutes completed</span></div>
+              <div><b id="who">&ndash;</b><span>Playing as <a href="login?change=1&next=afk-zone" id="change-acc-link" style="color:#00F0FF; margin-left:6px; font-weight:700; text-decoration:underline;">(Change)</a></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AD SLOT BANNER (728x90) -->
+        <div class="ad-slot ad-banner" data-ad="afk-banner" id="ad-banner"><span>Ad space &middot; 728 &times; 90</span></div>
+
+        <div class="cols">
+          <div class="card">
+            <h3>How it works</h3>
+            <ol class="steps">
+              <li><span class="n">1</span><div>Log in with your Minecraft username.</div></li>
+              <li><span class="n">2</span><div>Stay on this page &mdash; the timer runs every 1 minute.</div></li>
+              <li><span class="n">3</span><div>You&rsquo;ll receive in-game shards automatically while active.</div></li>
+              <li><span class="n">4</span><div><b>Anti-Cheat:</b> Only 1 active tab per IP address and account is permitted at a time.</div></li>
+            </ol>
+          </div>
+          <div class="card help">
+            <h3>Need help?</h3>
+            <p>Stuck or have a question? Ask our team on Discord.</p>
+            <a class="btn" href="https://discord.gg/bvVstrXWDC" target="_blank" rel="noopener">Join our Discord</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="ads ads-right">
+        <!-- AD SLOT RIGHT (300x600 / 300x250) -->
+        <div class="ad-slot ad-tall" data-ad="afk-right-1" id="ad-right-1"><span>Ad space<br>300 &times; 600</span></div>
+        <div class="ad-slot ad-rect" data-ad="afk-right-2" id="ad-right-2"><span>Ad space<br>300 &times; 250</span></div>
+      </aside>
+    </div>
+
+  <div class="more">
+    <h3>More free rewards</h3>
+    <div class="mini"><a href="free-redeem-codes"><img src="../website.aagmc.fun/codes.png" alt=""><b>Free Redeem Codes (Get Shards)</b></a></div>
+  </div>
+</div>
+
+<!-- Multi-Tab Conflict Overlay -->
+<div id="afk-multitab-modal" class="afk-overlay" style="display:none;">
+  <div class="afk-modal-card">
+    <div class="afk-modal-icon">⚠️</div>
+    <h2>Multiple Tabs Detected!</h2>
+    <p id="afk-modal-desc">AFK Zone is already running in another browser tab. Rewards can only be earned from a single active tab at a time.</p>
+    <button type="button" id="afk-claim-here-btn" class="afk-modal-btn">⚡ Use This Tab Instead</button>
+  </div>
+</div>
+
+<!-- IP Concurrency Locked Overlay -->
+<div id="afk-iplock-modal" class="afk-overlay" style="display:none;">
+  <div class="afk-modal-card danger">
+    <div class="afk-modal-icon">🛑</div>
+    <h2>IP Concurrency Blocked</h2>
+    <p id="afk-iplock-desc">Another account is already using the AFK Zone from this network.</p>
+    <div style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:16px;">
+      <button type="button" id="afk-switch-ip-btn" class="afk-modal-btn" style="background:linear-gradient(135deg, #0a6cff, #00F0FF); width:100%;">⚡ Switch &amp; Use This Account</button>
+      <button type="button" id="afk-change-acc-btn" class="afk-modal-btn" style="background:#222; border:1px solid #444; color:#fff; width:100%;">🚪 Change Username / Log Out</button>
+      <button type="button" id="afk-retry-ip-btn" class="afk-modal-btn" style="background:transparent; border:1px solid #333; color:#aaa; width:100%;">🔄 Check Again</button>
+    </div>
+  </div>
+</div>
+
+<footer>aagmc.fun &middot; Not associated with Mojang or Microsoft</footer>
+
+<script>
+(function () {
+  var DURATION = 60; // 1 minute in seconds
+  var C = 376.99;    // SVG circle circumference
+  var u = AAG.getUser();
+
+  if (u) {
+    document.getElementById('who').textContent = u.name;
+  }
+
+  var clock = document.getElementById('clock');
+  var ring = document.getElementById('ringfill');
+  var minsEl = document.getElementById('mins');
+  var statusEl = document.getElementById('status');
+
+  // Stable Tab ID per browser tab (survives page reloads in the same tab)
+  var tabId = sessionStorage.getItem('aag_afk_tab_id');
+  if (!tabId) {
+    tabId = 'tab_' + Math.random().toString(36).slice(2) + '_' + Date.now().toString(36);
+    sessionStorage.setItem('aag_afk_tab_id', tabId);
+  }
+
+  // Load completed minutes from localStorage
+  var savedMinutes = parseInt(localStorage.getItem('aag_afk_minutes') || '0', 10);
+  if (isNaN(savedMinutes) || savedMinutes < 0) savedMinutes = 0;
+  var minutes = savedMinutes;
+  minsEl.textContent = minutes;
+
+  var clientIp = '...';
+  var isPaused = false;
+  var isClaiming = false;
+  var isBlockedByAdBlock = false;
+  var currentLeft = DURATION;
+  var endTime = Date.now() + (DURATION * 1000);
+
+  function showToast(msg) {
+    var t = document.getElementById('afk-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'afk-toast';
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg, #0a6cff, #00d2ff);color:#fff;padding:14px 28px;border-radius:999px;font:800 15px "proxima-nova",Arial,sans-serif;box-shadow:0 8px 30px rgba(0,210,255,0.4);z-index:99999;transition:opacity 0.3s,transform 0.3s;opacity:0;pointer-events:none;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(-6px)';
+    setTimeout(function () {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(0)';
+    }, 4500);
+  }
+
+  // Cross-Tab Broadcast Channel (instant multi-tab detection)
+  var channel = null;
+  try {
+    if (typeof BroadcastChannel !== 'undefined') {
+      channel = new BroadcastChannel('aag_afk_mutex');
+    }
+  } catch (e) {}
+
+  function broadcastClaim() {
+    var payload = { type: 'CLAIM_TAB', tabId: tabId, time: Date.now() };
+    if (channel) {
+      try { channel.postMessage(payload); } catch (e) {}
+    }
+    try {
+      localStorage.setItem('aag_afk_leader', JSON.stringify(payload));
+    } catch (e) {}
+  }
+
+  if (channel) {
+    channel.onmessage = function (e) {
+      if (e && e.data && e.data.type === 'CLAIM_TAB' && e.data.tabId !== tabId) {
+        pauseForMultiTab();
+      }
+    };
+  }
+
+  window.addEventListener('storage', function (e) {
+    if (e.key === 'aag_afk_leader' && e.newValue) {
+      try {
+        var data = JSON.parse(e.newValue);
+        if (data && data.tabId && data.tabId !== tabId) {
+          pauseForMultiTab();
+        }
+      } catch (err) {}
+    }
+  });
+
+  function pauseForMultiTab() {
+    isPaused = true;
+    var modal = document.getElementById('afk-multitab-modal');
+    if (modal) modal.style.display = 'flex';
+    if (statusEl && statusEl.lastChild) {
+      statusEl.className = 'status paused';
+      statusEl.lastChild.textContent = 'Paused — Multiple tabs detected';
+    }
+  }
+
+  function resumeThisTab(force) {
+    var multiModal = document.getElementById('afk-multitab-modal');
+    if (multiModal) multiModal.style.display = 'none';
+    var ipModal = document.getElementById('afk-iplock-modal');
+    if (ipModal) ipModal.style.display = 'none';
+
+    broadcastClaim();
+
+    registerSession(force).then(function (ok) {
+      if (ok) {
+        isPaused = false;
+        endTime = Date.now() + (currentLeft * 1000);
+        if (statusEl && statusEl.lastChild) {
+          statusEl.className = 'status';
+          statusEl.lastChild.textContent = 'Active — earning';
+        }
+      }
+    });
+  }
+
+  function showIpLocked(msg) {
+    isPaused = true;
+    var modal = document.getElementById('afk-iplock-modal');
+    var desc = document.getElementById('afk-iplock-desc');
+    if (desc && msg) desc.textContent = msg;
+    else if (desc) desc.textContent = 'Another account is already using the AFK Zone from this network.';
+    if (modal) modal.style.display = 'flex';
+    if (statusEl && statusEl.lastChild) {
+      statusEl.className = 'status paused';
+      statusEl.lastChild.textContent = 'Blocked — Already active on this network';
+    }
+  }
+
+  function registerSession(force) {
+    if (!u) return Promise.resolve(false);
+    return AAG.api('/api/afk/register', {
+      name: u.name,
+      edition: u.edition,
+      tabId: tabId,
+      force: !!force
+    }).then(function (res) {
+      if (res && res.clientIp) {
+        clientIp = res.clientIp;
+      }
+      if (res && res.ok) {
+        return true;
+      }
+      if (res && res.code === 'IP_LOCKED') {
+        showIpLocked(res.error);
+        return false;
+      }
+      if (res && res.code === 'TAB_CONFLICT') {
+        pauseForMultiTab();
+        return false;
+      }
+      return false;
+    }).catch(function () {
+      return true;
+    });
+  }
+
+  // Hook buttons
+  var claimBtn = document.getElementById('afk-claim-here-btn');
+  if (claimBtn) {
+    claimBtn.addEventListener('click', function () {
+      resumeThisTab(true);
+    });
+  }
+  var retryIpBtn = document.getElementById('afk-retry-ip-btn');
+  if (retryIpBtn) {
+    retryIpBtn.addEventListener('click', function () {
+      resumeThisTab(false);
+    });
+  }
+
+  var switchIpBtn = document.getElementById('afk-switch-ip-btn');
+  if (switchIpBtn) {
+    switchIpBtn.addEventListener('click', function () {
+      switchIpBtn.disabled = true;
+      switchIpBtn.textContent = 'Switching to this account...';
+      resumeThisTab(true);
+    });
+  }
+
+  var changeAccBtn = document.getElementById('afk-change-acc-btn');
+  if (changeAccBtn) {
+    changeAccBtn.addEventListener('click', function () {
+      if (window.AAG && window.AAG.logout) window.AAG.logout();
+      window.location.href = 'login?change=1&next=afk-zone';
+    });
+  }
+
+  var changeLink = document.getElementById('change-acc-link');
+  if (changeLink) {
+    changeLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (window.AAG && window.AAG.logout) window.AAG.logout();
+      window.location.href = 'login?change=1&next=afk-zone';
+    });
+  }
+
+  // Initial tab registration
+  broadcastClaim();
+  registerSession(false);
+
+  // Periodic heartbeat every 20 seconds
+  setInterval(function () {
+    if (!isPaused && !isClaiming) {
+      registerSession(false);
+    }
+  }, 20000);
+
+  // Check if page was just reloaded after completing a minute
+  if (sessionStorage.getItem('aag_afk_just_reloaded') === 'true') {
+    sessionStorage.removeItem('aag_afk_just_reloaded');
+    showToast('🎉 +1 Minute Complete! Shard credited in-game. Next minute started!');
+  }
+
+  document.addEventListener('aag:adblock', function () {
+    isBlockedByAdBlock = true;
+    if (statusEl && statusEl.lastChild) {
+      statusEl.className = 'status paused';
+      statusEl.lastChild.textContent = 'Paused — Disable AdBlocker to continue earning';
+    }
+  });
+
+  function render(left) {
+    var m = Math.floor(left / 60);
+    var s = left % 60;
+    clock.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    ring.setAttribute('stroke-dashoffset', (C * (left / DURATION)).toFixed(2));
+    minsEl.textContent = minutes;
+  }
+
+  function tick() {
+    if (isClaiming || isPaused) return;
+
+    if (isBlockedByAdBlock || window.AAG_adBlocked) {
+      isBlockedByAdBlock = true;
+      endTime = Date.now() + (currentLeft * 1000);
+      if (statusEl && statusEl.lastChild) {
+        statusEl.className = 'status paused';
+        statusEl.lastChild.textContent = 'Paused — Disable AdBlocker to continue earning';
+      }
+      return;
+    }
+
+    var now = Date.now();
+    var leftMs = endTime - now;
+    var leftSec = Math.max(0, Math.ceil(leftMs / 1000));
+    currentLeft = leftSec;
+    render(leftSec);
+
+    if (leftSec <= 0) {
+      isClaiming = true;
+      clock.textContent = '00:00';
+      if (statusEl && statusEl.lastChild) {
+        statusEl.className = 'status';
+        statusEl.lastChild.textContent = 'Delivering Shard & refreshing ads...';
+      }
+
+      // Send reward to server & queue for Minecraft with tabId verification
+      AAG.api('/api/afk', {
+        name: u ? u.name : '',
+        edition: u ? u.edition : 'java',
+        tabId: tabId
+      }).then(function (res) {
+        if (!res || !res.ok) {
+          isClaiming = false;
+          if (res && res.code === 'IP_LOCKED') {
+            showIpLocked(res.error);
+            return;
+          }
+          if (res && res.code === 'TAB_CONFLICT') {
+            pauseForMultiTab();
+            return;
+          }
+          if (res && res.code === 'TOO_FAST') {
+            endTime = Date.now() + 15000;
+            return;
+          }
+        }
+        var updatedMins = (res && typeof res.afkMinutes === 'number') ? res.afkMinutes : (minutes + 1);
+        localStorage.setItem('aag_afk_minutes', updatedMins);
+        sessionStorage.setItem('aag_afk_just_reloaded', 'true');
+        window.location.reload();
+      }).catch(function () {
+        localStorage.setItem('aag_afk_minutes', minutes + 1);
+        sessionStorage.setItem('aag_afk_just_reloaded', 'true');
+        window.location.reload();
+      });
+    }
+  }
+
+  render(DURATION);
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAG SMP | Your Code</title>
+<link rel="shortcut icon" href="../website.aagmc.fun/bcGCsev.png">
+<link rel="stylesheet" href="rewards.css">
+<script src="config.js"></script>
+<script src="login.js"></script>
+<script src="ads.js" defer></script>
+<script>AAG.requireLogin();</script>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <a class="chip" href="/"><img src="../website.aagmc.fun/logo.png" alt="AAG MC"></a>
+    <a class="pill" href="free-redeem-codes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Free Redeem Codes</a>
+  </div>
+
+  <div class="banner">
+    <div class="txt"><h1>Your Code</h1><p>Copy it and redeem it on the Free Redeem Codes page.</p></div>
+    <img src="../website.aagmc.fun/codes.png" alt="">
+  </div>
+
+  <div class="card claim" id="claim-card">
+    <div class="status-line" id="cl-status">Getting your code...</div>
+    <div class="codebox" id="cl-code" style="display:none"></div>
+    <div class="claim-actions" id="cl-actions" style="display:none">
+      <button class="btn dark" type="button" id="cl-copy">Copy code</button>
+      <a class="btn" href="free-redeem-codes#redeem">Go to Redeem</a>
+    </div>
+    <div class="claim-actions" id="cl-back" style="display:none">
+      <a class="btn" href="free-redeem-codes">Back to Code Links</a>
+    </div>
+  </div>
+</div>
+<aside class="rail rail-l"><div class="ad-slot ad-sky" data-ad="rail-left"><span>Ad space<br>160 &times; 600</span></div></aside>
+<aside class="rail rail-r"><div class="ad-slot ad-sky" data-ad="rail-right"><span>Ad space<br>160 &times; 600</span></div></aside>
+<div class="ad-bottom"><div class="ad-slot ad-banner" data-ad="bottom"><span>Ad space &middot; 728 &times; 90</span></div></div>
+<footer>aagmc.fun &middot; Not associated with Mojang or Microsoft</footer>
+<script>
+(function () {
+  var id = new URLSearchParams(location.search).get('l')
+        || sessionStorage.getItem('aag_last_link')
+        || localStorage.getItem('aag_last_link')
+        || 'link1';
+  var sToken = new URLSearchParams(location.search).get('s')
+        || sessionStorage.getItem('aag_session_token')
+        || localStorage.getItem('aag_session_token')
+        || '';
+
+  // Persist token so reloads or retries don't lose it
+  if (sToken) {
+    try {
+      sessionStorage.setItem('aag_session_token', sToken);
+      localStorage.setItem('aag_session_token', sToken);
+    } catch (e) {}
+  }
+
+  var st = document.getElementById('cl-status'), codeEl = document.getElementById('cl-code'),
+      acts = document.getElementById('cl-actions'), back = document.getElementById('cl-back');
+  function fail(msg) { st.className = 'status-line err'; st.textContent = msg; back.style.display = 'flex'; }
+  function attempt(tries) {
+    AAG.rewards.claim(id, sToken).then(function (r) {
+      if (r && r.ok) {
+        st.className = 'status-line ok'; st.textContent = 'Here is your code:';
+        codeEl.textContent = r.code; codeEl.style.display = 'block'; acts.style.display = 'flex';
+        try { sessionStorage.removeItem('aag_session_token'); localStorage.removeItem('aag_session_token'); } catch (e) {}
+        document.getElementById('cl-copy').onclick = function () {
+          var b = this, done = function () { b.textContent = 'Copied!'; setTimeout(function () { b.textContent = 'Copy code'; }, 1500); };
+          if (navigator.clipboard) navigator.clipboard.writeText(r.code).then(done, done); else done();
+        };
+      } else if (r && r.waitSeconds && tries < 20) {
+        st.className = 'status-line';
+        st.textContent = 'Verifying sponsor visit... please wait ' + r.waitSeconds + 's...';
+        setTimeout(function () { attempt(tries + 1); }, (r.waitSeconds + 1) * 1000);
+      } else { fail((r && r.error) || 'Something went wrong.'); }
+    });
+  }
+  attempt(0);
+})();
+</script>
+</body>
+</html>

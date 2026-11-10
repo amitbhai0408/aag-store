@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAG SMP | Login</title>
+<link rel="shortcut icon" href="../website.aagmc.fun/bcGCsev.png">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#111;color:#fff;font-family:"proxima-nova",Arial,sans-serif}
+  .wrap{max-width:972px;margin:0 auto;padding:90px 16px 40px}
+  .box{background:#1e1e1e;border-radius:34px;box-shadow:0 8px 0 #000;overflow:hidden}
+  h1{margin:0;padding:30px 20px 24px;text-align:center;font-family:"Arial Black","Archivo Black",Impact,sans-serif;font-weight:900;font-size:26px;border-bottom:1px solid #2e2e2e}
+  form{padding:28px 20px 44px;display:flex;flex-direction:column;align-items:center;gap:34px}
+  .ed{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .ed button{display:flex;align-items:center;gap:10px;border:0;border-radius:10px;background:#111;color:#fff;padding:0 30px;height:55px;font:800 14px Arial,sans-serif;text-transform:uppercase;cursor:pointer}
+  .ed button.on{background:#0a6cff}
+  .ed svg{width:24px;height:24px;fill:currentColor}
+  .row{display:flex;max-width:100%}
+  .row input{width:217px;max-width:55vw;height:46px;border:0;border-radius:6px 0 0 6px;background:#111;color:#fff;padding:0 16px;font:400 18px Arial,sans-serif;outline:none}
+  .row input::placeholder{color:#9a9a9a}
+  .row input:focus{box-shadow:inset 0 0 0 2px #0a6cff}
+  .row button{height:46px;border:0;border-radius:0 6px 6px 0;background:#0a6cff;color:#fff;padding:0 16px;font:800 17px Arial,sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px}
+  .row button:hover{background:#1a79ff}
+  .row button:disabled{opacity:.7;cursor:wait}
+  .row button svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+  .err{margin-top:-18px;min-height:18px;color:#ff6b6b;font-size:14px;text-align:center}
+  .back{display:block;text-align:center;margin-top:26px;color:#9a9a9a;text-decoration:none;font-size:15px}
+  .back:hover{color:#fff}
+</style>
+<script src="config.js"></script>
+<script src="login.js"></script>
+<script src="ads.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <h1>Enter your Minecraft Username</h1>
+    <form id="f" autocomplete="off">
+      <div class="ed">
+        <button type="button" data-ed="java" class="on"><svg viewBox="0 0 24 24"><path d="M3 4h18a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 9h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-7v2h3v1.5H7V20h3v-2H3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1zM5 7v2h4V7zm0 8v1h4v-1z"/></svg>Java</button>
+        <button type="button" data-ed="bedrock"><svg viewBox="0 0 24 24"><path d="M7 5h10a5 5 0 0 1 4.8 3.6l1 3.7A4 4 0 0 1 19 17h-1.5l-1.5-2h-8l-1.5 2H5a4 4 0 0 1-3.9-4.8l.9-3.8A5 5 0 0 1 7 5zm.2 3.2v1.6H5.6v1.6h1.6V13h1.6v-1.6h1.6V9.8H8.8V8.2zm8.6.3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm2.4 2.4a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>Bedrock</button>
+      </div>
+      <div class="row">
+        <input id="u" type="text" maxlength="20" placeholder="Enter your username" spellcheck="false" autocapitalize="off" autofocus>
+        <button id="go" type="submit">Continue <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+  </div>
+  <a class="back" href="/">&larr; Back to home</a>
+</div>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var isChange = params.get('change') === '1' || params.get('logout') === '1';
+  if (isChange) {
+    if (window.AAG && window.AAG.logout) window.AAG.logout();
+  }
+  var next = AAG.safeNext(params.get('next'));
+  if (!isChange && AAG.getUser()) { location.replace(next); return; }
+  var edition = 'java', f = document.getElementById('f'), u = document.getElementById('u'),
+      err = document.getElementById('err'), go = document.getElementById('go');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ed]'), function (b) {
+    b.addEventListener('click', function () {
+      edition = b.getAttribute('data-ed');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-ed]'), function (x) { x.classList.toggle('on', x === b); });
+      u.placeholder = edition === 'bedrock' ? 'Enter Bedrock gamertag (e.g. Amit)' : 'Enter your Java username';
+      err.textContent = ''; u.focus();
+    });
+  });
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = u.value.trim();
+    if (!AAG.validate(name, edition)) {
+      err.textContent = edition === 'java'
+        ? 'Java usernames are 3-16 characters: letters, numbers or _ only.'
+        : 'Enter your Bedrock gamertag (letters, numbers, spaces or _).';
+      return;
+    }
+    go.disabled = true;
+    AAG.login(name, edition).then(function () { location.href = next; });
+  });
+})();
+</script>
+</body>
+</html>

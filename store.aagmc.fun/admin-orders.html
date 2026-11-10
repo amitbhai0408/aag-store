@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AAG Store | Admin Order Approvals</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #090c15; color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh; padding: 24px 16px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+      padding-bottom: 16px; border-bottom: 1px solid #1e2638;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand h1 { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .brand .badge {
+      background: #0a6cff; color: #fff; font-size: 11px; font-weight: 800;
+      padding: 3px 8px; border-radius: 6px; text-transform: uppercase;
+    }
+    .head-actions { display: flex; gap: 10px; align-items: center; }
+    button.btn {
+      border: 0; border-radius: 10px; padding: 10px 16px; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary { background: #0a6cff; color: #fff; }
+    .btn-primary:hover { background: #1a79ff; }
+    .btn-secondary { background: #1a2233; color: #94a3b8; }
+    .btn-secondary:hover { background: #242f47; color: #fff; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #121724; border: 1px solid #1f283c; border-radius: 16px; padding: 18px 20px;
+    }
+    .stat-label { font-size: 13px; color: #94a3b8; margin-bottom: 6px; font-weight: 600; }
+    .stat-val { font-size: 26px; font-weight: 900; color: #fff; }
+    .stat-val.revenue { color: #34d399; }
+    .stat-val.pending { color: #facc15; }
+
+    /* Filter & Search Bar */
+    .filter-bar {
+      display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1; min-width: 240px; background: #121724; border: 1px solid #1f283c;
+      border-radius: 10px; padding: 11px 14px; font-size: 14px; color: #fff; outline: none;
+    }
+    .search-input:focus { border-color: #0a6cff; }
+
+    /* Table */
+    .table-box {
+      background: #121724; border: 1px solid #1f283c; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      background: #161d2d; padding: 14px 16px; font-size: 12px; font-weight: 700;
+      color: #94a3b8; text-transform: uppercase; border-bottom: 1px solid #1f283c;
+    }
+    td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid #1a2233; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge-status {
+      display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 11px;
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .status-PENDING { background: rgba(250, 204, 21, 0.15); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.3); }
+    .status-APPROVED { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-REJECTED { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .utr-code { font-family: monospace; font-size: 13px; color: #38bdf8; background: #0c101a; padding: 3px 6px; border-radius: 5px; }
+
+    .action-group { display: flex; gap: 8px; align-items: center; }
+    .btn-approve {
+      background: #10b981; color: #041f14; padding: 8px 14px; border-radius: 8px; font-size: 13px;
+      font-weight: 800; border: 0; cursor: pointer; transition: all 0.15s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+      user-select: none;
+    }
+    .btn-approve:hover:not(:disabled) { background: #34d399; transform: translateY(-1px); }
+    .btn-approve:active:not(:disabled) { transform: scale(0.97); }
+    .btn-approve:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-reject {
+      background: #ef4444; color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 13px;
+      font-weight: 800; border: 0; cursor: pointer; transition: all 0.15s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+      user-select: none;
+    }
+    .btn-reject:hover:not(:disabled) { background: #f87171; transform: translateY(-1px); }
+    .btn-reject:active:not(:disabled) { transform: scale(0.97); }
+    .btn-reject:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-receipt {
+      background: #182234; color: #38bdf8; border: 1px solid #28374f;
+      padding: 6px 11px; border-radius: 8px; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .btn-receipt:hover { background: #22324d; color: #fff; border-color: #38bdf8; }
+
+    /* Toast Container */
+    #toast-wrap {
+      position: fixed; top: 20px; right: 20px; z-index: 99999999;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast-msg {
+      pointer-events: auto; background: #121724; border: 1px solid #1f283c;
+      padding: 14px 18px; border-radius: 12px; font-size: 13.5px; font-weight: 700;
+      color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: flex; align-items: center; gap: 10px;
+      animation: toastIn 0.25s ease-out; min-width: 280px; max-width: 440px;
+    }
+    .toast-msg.success { border-color: #10b981; background: #062b1d; color: #6ee7b7; }
+    .toast-msg.error { border-color: #ef4444; background: #3b0d0d; color: #fca5a5; }
+    .toast-msg.info { border-color: #0ea5e9; background: #082f49; color: #7dd3fc; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Custom Confirm Modal */
+    #confirm-overlay {
+      position: fixed; inset: 0; background: rgba(4,7,14,0.92); backdrop-filter: blur(8px);
+      z-index: 999999; display: none; align-items: center; justify-content: center; padding: 16px;
+    }
+    .confirm-card {
+      background: #141721; border: 1px solid #282f44; border-radius: 18px;
+      max-width: 400px; width: 100%; padding: 24px; text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+    }
+    .confirm-card h3 { font-size: 18px; font-weight: 800; color: #fff; margin: 10px 0 8px; }
+    .confirm-card p { font-size: 13.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px; }
+    .confirm-actions { display: flex; gap: 10px; }
+    .confirm-actions button { flex: 1; justify-content: center; }
+
+    /* Auth modal */
+    #auth-overlay {
+      position: fixed; inset: 0; background: rgba(4,7,14,0.95); z-index: 999;
+      display: flex; align-items: center; justify-content: center; padding: 16px;
+    }
+    .auth-card {
+      background: #141721; border: 1px solid #282f44; border-radius: 20px;
+      padding: 30px; max-width: 380px; width: 100%; text-align: center;
+    }
+    .auth-card h2 { margin-bottom: 12px; font-size: 20px; }
+    .auth-card p { font-size: 13px; color: #94a3b8; margin-bottom: 18px; }
+
+    @media (max-width: 768px) {
+      .table-box { overflow-x: auto; }
+      table { min-width: 700px; }
+      #toast-wrap { left: 16px; right: 16px; top: 16px; }
+      .toast-msg { max-width: 100%; min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast-wrap"></div>
+
+<div id="confirm-overlay">
+  <div class="confirm-card">
+    <div style="font-size:36px; margin-bottom:4px;">⚠️</div>
+    <h3 id="confirm-title">Reject Order</h3>
+    <p id="confirm-desc">Are you sure you want to reject this order?</p>
+    <div class="confirm-actions">
+      <button type="button" class="btn btn-secondary" id="confirm-cancel-btn">Cancel</button>
+      <button type="button" class="btn" id="confirm-ok-btn" style="background:#ef4444; color:#fff;">Confirm Reject</button>
+    </div>
+  </div>
+</div>
+
+<div id="auth-overlay" style="display: flex;">
+  <div class="auth-card" style="box-shadow: 0 20px 60px rgba(0,0,0,0.85); border: 1px solid #334155;">
+    <div style="font-size: 46px; margin-bottom: 6px;">🔐</div>
+    <h2 style="font-size: 22px; font-weight: 800; color: #fff;">Admin Authentication</h2>
+    <p style="color: #94a3b8; font-size: 13px; margin: 8px 0 16px;">Yeh page password-protected hai. UPI Approvals dashboard access karne ke liye Admin Password enter karein:</p>
+    <form id="auth-form" onsubmit="return false;">
+      <input type="password" id="auth-key-input" class="search-input" placeholder="Enter Admin Password" autocomplete="current-password" autofocus style="width: 100%; margin-bottom: 10px; font-size: 15px; text-align: center; background: #090c15;" />
+      <div id="auth-err" style="color: #ef4444; font-size: 13px; font-weight: 600; min-height: 20px; margin-bottom: 12px;"></div>
+      <button type="submit" class="btn btn-primary" id="auth-submit-btn" style="width: 100%; justify-content: center; font-size: 15px; padding: 12px;">Unlock Dashboard</button>
+    </form>
+  </div>
+</div>
+
+<div id="receipt-overlay" style="display:none; position:fixed; inset:0; background:rgba(4,7,14,0.92); backdrop-filter:blur(8px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+  <div style="background:#141721; border:1px solid #282f44; border-radius:20px; max-width:540px; width:100%; max-height:92vh; overflow-y:auto; padding:22px; position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.85);">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; border-bottom:1px solid #1f2537; padding-bottom:12px;">
+      <div>
+        <h3 id="rc-title" style="font-size:18px; font-weight:800; color:#fff; margin:0 0 2px;">Receipt Screenshot</h3>
+        <span id="rc-sub" style="font-size:12px; color:#38bdf8; font-family:monospace;">Order #AAG-XXXX</span>
+      </div>
+      <button type="button" onclick="closeReceiptModal()" style="background:#1f2537; border:0; color:#94a3b8; font-size:24px; line-height:1; width:34px; height:34px; border-radius:50%; cursor:pointer;">&times;</button>
+    </div>
+    <div style="background:#090c15; border-radius:12px; padding:8px; text-align:center; margin-bottom:16px;">
+      <img id="rc-img" src="" alt="Payment Receipt" style="max-width:100%; max-height:58vh; object-fit:contain; border-radius:8px;" />
+    </div>
+    <div style="display:flex; gap:10px; justify-content:space-between; align-items:center;" id="rc-footer">
+      <div id="rc-info" style="font-size:13px; color:#cbd5e1;"></div>
+      <div style="display:flex; gap:8px;" id="rc-actions"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="admin-main" style="display: none;">
+  <header>
+    <div class="brand">
+      <h1>AAG SMP Store</h1>
+      <span class="badge">UPI Approvals</span>
+    </div>
+    <div class="head-actions">
+      <button type="button" class="btn btn-secondary" id="refresh-btn">🔄 Refresh Orders</button>
+      <button type="button" class="btn btn-secondary" id="logout-btn">🔒 Logout</button>
+    </div>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Pending Approvals</div>
+      <div class="stat-val pending" id="stat-pending">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Approved Orders</div>
+      <div class="stat-val" id="stat-approved">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Revenue</div>
+      <div class="stat-val revenue" id="stat-revenue">₹0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Submissions</div>
+      <div class="stat-val" id="stat-total">0</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" id="search-box" class="search-input" placeholder="Search by Player Username, Order ID, or UTR..." />
+  </div>
+
+  <div class="table-box">
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Player</th>
+          <th>Package</th>
+          <th>Amount</th>
+          <th>Receipt Proof</th>
+          <th>Payment Mode / UTR</th>
+          <th>Submitted Time</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="orders-tbody">
+        <tr>
+          <td colspan="9" style="text-align: center; color: #94a3b8; padding: 30px;">Loading orders...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var KEY_STORAGE = 'aag_admin_key_session';
+    var currentKey = '';
+    var allOrders = [];
+    var isProcessing = false;
+
+    function getKey() {
+      return currentKey || sessionStorage.getItem(KEY_STORAGE) || '';
+    }
+
+    function showToast(msg, type) {
+      type = type || 'info';
+      var wrap = document.getElementById('toast-wrap');
+      if (!wrap) return;
+      var el = document.createElement('div');
+      el.className = 'toast-msg ' + type;
+      var icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : 'ℹ️');
+      el.innerHTML = '<span style="font-size:16px;">' + icon + '</span><span>' + msg + '</span>';
+      wrap.appendChild(el);
+      setTimeout(function () {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-10px)';
+        el.style.transition = 'all 0.25s ease-out';
+        setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 250);
+      }, 4000);
+    }
+
+    function checkAuth() {
+      // 1. Check if key is passed via URL query param
+      var urlParams = new URLSearchParams(window.location.search);
+      var urlKey = urlParams.get('key');
+      if (urlKey) {
+        // Strip ?key=... immediately from browser address bar so it cannot be copied/leaked!
+        window.history.replaceState({}, document.title, window.location.pathname);
+        verifyAndLogin(urlKey);
+        return;
+      }
+
+      // 2. Check session storage
+      var saved = sessionStorage.getItem(KEY_STORAGE);
+      if (saved) {
+        verifyAndLogin(saved);
+      } else {
+        // Completely locked: keep dashboard hidden and show login prompt
+        document.getElementById('admin-main').style.display = 'none';
+        document.getElementById('auth-overlay').style.display = 'flex';
+        var inp = document.getElementById('auth-key-input');
+        if (inp) inp.focus();
+      }
+    }
+
+    function verifyAndLogin(k) {
+      if (!k) return;
+      var errEl = document.getElementById('auth-err');
+      var btn = document.getElementById('auth-submit-btn');
+      if (errEl) errEl.textContent = '';
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Verifying Password...';
+      }
+
+      fetch('/api/admin/orders?key=' + encodeURIComponent(k), {
+        headers: { 'X-Admin-Key': k }
+      })
+      .then(function (r) {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Unlock Dashboard';
+        }
+        if (!r.ok) {
+          sessionStorage.removeItem(KEY_STORAGE);
+          currentKey = '';
+          document.getElementById('admin-main').style.display = 'none';
+          document.getElementById('auth-overlay').style.display = 'flex';
+          if (errEl) errEl.textContent = '❌ Galat Password! Access Denied.';
+          var inp = document.getElementById('auth-key-input');
+          if (inp) {
+            inp.value = '';
+            inp.focus();
+          }
+          throw new Error('Unauthorized');
+        }
+        return r.json();
+      })
+      .then(function (data) {
+        if (data && data.ok) {
+          currentKey = k;
+          sessionStorage.setItem(KEY_STORAGE, k);
+          document.getElementById('auth-overlay').style.display = 'none';
+          document.getElementById('admin-main').style.display = 'block';
+          allOrders = data.orders || [];
+          updateStats(data.stats);
+          renderTable();
+          showToast('Admin authentication successful', 'success');
+        }
+      })
+      .catch(function (e) {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Unlock Dashboard';
+        }
+      });
+    }
+
+    var authForm = document.getElementById('auth-form');
+    if (authForm) {
+      authForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var k = document.getElementById('auth-key-input').value.trim();
+        if (k) verifyAndLogin(k);
+      });
+    }
+
+    document.getElementById('auth-submit-btn').addEventListener('click', function (e) {
+      e.preventDefault();
+      var k = document.getElementById('auth-key-input').value.trim();
+      if (k) verifyAndLogin(k);
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', function () {
+      sessionStorage.removeItem(KEY_STORAGE);
+      localStorage.removeItem('aag_admin_key');
+      currentKey = '';
+      document.getElementById('admin-main').style.display = 'none';
+      document.getElementById('auth-overlay').style.display = 'flex';
+      var inp = document.getElementById('auth-key-input');
+      if (inp) {
+        inp.value = '';
+        inp.focus();
+      }
+      var errEl = document.getElementById('auth-err');
+      if (errEl) {
+        errEl.style.color = '#38bdf8';
+        errEl.textContent = 'Logged out successfully.';
+      }
+    });
+
+    document.getElementById('refresh-btn').addEventListener('click', function () {
+      loadOrders();
+      showToast('Orders refreshed', 'info');
+    });
+
+    document.getElementById('search-box').addEventListener('input', renderTable);
+
+    function loadOrders() {
+      if (isProcessing) return;
+      var k = getKey();
+      if (!k) return;
+      fetch('/api/admin/orders?key=' + encodeURIComponent(k), {
+        headers: { 'X-Admin-Key': k }
+      })
+      .then(function (r) {
+        if (r.status === 403) {
+          sessionStorage.removeItem(KEY_STORAGE);
+          currentKey = '';
+          document.getElementById('admin-main').style.display = 'none';
+          document.getElementById('auth-overlay').style.display = 'flex';
+          var errEl = document.getElementById('auth-err');
+          if (errEl) errEl.textContent = 'Session expired. Password dobara enter karein.';
+          throw new Error('Unauthorized');
+        }
+        return r.json();
+      })
+      .then(function (data) {
+        if (data && data.ok) {
+          allOrders = data.orders || [];
+          updateStats(data.stats);
+          renderTable();
+        }
+      })
+      .catch(function (e) {
+        console.error('Failed to load orders', e);
+      });
+    }
+
+    function updateStats(stats) {
+      if (!stats) {
+        var pending = 0, approved = 0, revenue = 0;
+        allOrders.forEach(function (o) {
+          if (o.status === 'PENDING') pending++;
+          if (o.status === 'APPROVED') {
+            approved++;
+            revenue += (parseInt(o.price, 10) || 0);
+          }
+        });
+        stats = { pending: pending, approved: approved, revenue: revenue, total: allOrders.length };
+      }
+      document.getElementById('stat-pending').textContent = stats.pending || 0;
+      document.getElementById('stat-approved').textContent = stats.approved || 0;
+      document.getElementById('stat-revenue').textContent = '₹' + (stats.revenue || 0).toLocaleString();
+      document.getElementById('stat-total').textContent = stats.total || 0;
+    }
+
+    function renderTable() {
+      var tbody = document.getElementById('orders-tbody');
+      var q = (document.getElementById('search-box').value || '').trim().toLowerCase();
+
+      var list = allOrders.filter(function (o) {
+        if (!q) return true;
+        return (o.id && o.id.toLowerCase().indexOf(q) !== -1) ||
+               (o.player && o.player.toLowerCase().indexOf(q) !== -1) ||
+               (o.utr && o.utr.toLowerCase().indexOf(q) !== -1) ||
+               (o.packageName && o.packageName.toLowerCase().indexOf(q) !== -1);
+      });
+
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #94a3b8; padding: 30px;">Koi order nahi mila.</td></tr>';
+        return;
+      }
+
+      var html = '';
+      list.forEach(function (o) {
+        var timeStr = o.createdAt ? new Date(o.createdAt).toLocaleString() : '-';
+        var actionHtml = '';
+
+        if (o.status === 'PENDING') {
+          actionHtml = '<div class="action-group" id="actions-' + o.id + '">' +
+            '<button type="button" class="btn-approve" data-id="' + o.id + '" data-action="approve" onclick="window.handleAction(\'' + o.id + '\', \'approve\', this)">✅ Approve</button>' +
+            '<button type="button" class="btn-reject" data-id="' + o.id + '" data-action="reject" onclick="window.handleAction(\'' + o.id + '\', \'reject\', this)">❌ Reject</button>' +
+            '</div>';
+        } else if (o.status === 'APPROVED') {
+          actionHtml = '<span style="color:#34d399;font-weight:700;font-size:12px;">Delivered ✓</span>';
+        } else {
+          actionHtml = '<span style="color:#94a3b8;font-size:12px;">Rejected</span>';
+        }
+
+        var utrDisplay = '';
+        if (o.utr && !o.utr.startsWith('UPI-DIRECT') && o.utrProvided !== false) {
+          utrDisplay = '<span class="utr-code">' + o.utr + '</span>';
+        } else {
+          utrDisplay = '<span style="background:rgba(14,165,233,0.15);color:#38bdf8;border:1px solid rgba(14,165,233,0.3);padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">⚡ Direct UPI</span>';
+        }
+
+        var receiptDisplay = '';
+        if (o.receiptUrl) {
+          receiptDisplay = '<button type="button" class="btn-receipt" data-id="' + o.id + '" data-action="proof" onclick="window.viewReceipt(\'' + o.receiptUrl + '\', \'' + o.id + '\', \'' + o.player + '\', \'' + o.price + '\', \'' + o.status + '\')">🖼️ View Proof</button>';
+        } else {
+          receiptDisplay = '<span style="color:#64748b;font-size:12px;">No proof</span>';
+        }
+
+        html += '<tr id="order-row-' + o.id + '">' +
+          '<td><b>' + o.id + '</b></td>' +
+          '<td><b>' + o.player + '</b> <small style="color:#94a3b8">(' + o.edition + ')</small></td>' +
+          '<td>' + (o.packageName || o.packageId) + '</td>' +
+          '<td><b style="color:#fff">₹' + o.price + '</b></td>' +
+          '<td>' + receiptDisplay + '</td>' +
+          '<td>' + utrDisplay + '</td>' +
+          '<td style="color:#94a3b8;font-size:12px;">' + timeStr + '</td>' +
+          '<td id="status-cell-' + o.id + '"><span class="badge-status status-' + o.status + '">' + o.status + '</span></td>' +
+          '<td id="action-cell-' + o.id + '">' + actionHtml + '</td>' +
+          '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // Direct Instant Approve / Action
+    function executeOrderAction(orderId, action, btnEl) {
+      if (isProcessing) return;
+      isProcessing = true;
+
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = (action === 'approve') ? '⏳ Approving...' : '⏳ Rejecting...';
+      }
+
+      var k = getKey();
+      fetch('/api/admin/order-action?key=' + encodeURIComponent(k), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': k
+        },
+        body: JSON.stringify({ orderId: orderId, action: action })
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        isProcessing = false;
+        if (data && data.ok) {
+          showToast(data.message || ('Order #' + orderId + ' updated!'), 'success');
+
+          // Update in-memory record
+          var ord = allOrders.find(function (x) { return x.id === orderId; });
+          if (ord) {
+            ord.status = (action === 'approve') ? 'APPROVED' : 'REJECTED';
+          }
+          updateStats();
+
+          // Instant DOM update for this row
+          var statusCell = document.getElementById('status-cell-' + orderId);
+          var actionCell = document.getElementById('action-cell-' + orderId);
+          if (statusCell) {
+            var newStatus = (action === 'approve') ? 'APPROVED' : 'REJECTED';
+            statusCell.innerHTML = '<span class="badge-status status-' + newStatus + '">' + newStatus + '</span>';
+          }
+          if (actionCell) {
+            if (action === 'approve') {
+              actionCell.innerHTML = '<span style="color:#34d399;font-weight:700;font-size:12px;">Delivered ✓</span>';
+            } else {
+              actionCell.innerHTML = '<span style="color:#94a3b8;font-size:12px;">Rejected</span>';
+            }
+          }
+
+          // If receipt modal is open for this order, close or update it
+          closeReceiptModal();
+        } else {
+          showToast('Error: ' + ((data && data.error) ? data.error : 'Unknown error'), 'error');
+          if (btnEl) {
+            btnEl.disabled = false;
+            btnEl.textContent = (action === 'approve') ? '✅ Approve' : '❌ Reject';
+          }
+        }
+      })
+      .catch(function (err) {
+        isProcessing = false;
+        console.error(err);
+        showToast('Server connect error! Check connection.', 'error');
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.textContent = (action === 'approve') ? '✅ Approve' : '❌ Reject';
+        }
+      });
+    }
+
+    // Modal reject confirmation (No browser native confirm!)
+    var pendingRejectId = null;
+    var pendingRejectBtn = null;
+    function promptReject(orderId, btnEl) {
+      pendingRejectId = orderId;
+      pendingRejectBtn = btnEl;
+      var ord = allOrders.find(function (x) { return x.id === orderId; });
+      var player = ord ? ord.player : '';
+      document.getElementById('confirm-title').textContent = 'Reject Order #' + orderId;
+      document.getElementById('confirm-desc').textContent = 'Kya aap sure hain ki ' + (player ? player + ' ka ' : '') + 'Order #' + orderId + ' REJECT karna chahte hain?';
+      document.getElementById('confirm-overlay').style.display = 'flex';
+    }
+
+    document.getElementById('confirm-cancel-btn').addEventListener('click', function () {
+      document.getElementById('confirm-overlay').style.display = 'none';
+      pendingRejectId = null;
+      pendingRejectBtn = null;
+    });
+
+    document.getElementById('confirm-ok-btn').addEventListener('click', function () {
+      document.getElementById('confirm-overlay').style.display = 'none';
+      if (pendingRejectId) {
+        executeOrderAction(pendingRejectId, 'reject', pendingRejectBtn);
+        pendingRejectId = null;
+        pendingRejectBtn = null;
+      }
+    });
+
+    // Global hook for inline onclick and delegation
+    window.handleAction = function (orderId, action, btnEl) {
+      if (!btnEl && typeof event !== 'undefined' && event && event.target) {
+        btnEl = event.target.closest('button');
+      }
+      if (action === 'approve') {
+        executeOrderAction(orderId, 'approve', btnEl);
+      } else if (action === 'reject') {
+        promptReject(orderId, btnEl);
+      }
+    };
+
+    // Event Delegation on Table Body (Prevents any click loss)
+    document.getElementById('orders-tbody').addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var act = btn.getAttribute('data-action');
+      var id = btn.getAttribute('data-id');
+      if (act === 'approve') {
+        e.preventDefault();
+        executeOrderAction(id, 'approve', btn);
+      } else if (act === 'reject') {
+        e.preventDefault();
+        promptReject(id, btn);
+      }
+    });
+
+    window.viewReceipt = function (receiptUrl, orderId, player, price, status) {
+      document.getElementById('rc-img').src = receiptUrl;
+      document.getElementById('rc-sub').textContent = 'Order #' + orderId + ' • Player: ' + player + ' (₹' + price + ')';
+      document.getElementById('rc-info').innerHTML = 'Status: <b style="color:' + (status === 'APPROVED' ? '#34d399' : (status === 'PENDING' ? '#facc15' : '#f87171')) + ';">' + status + '</b>';
+
+      var actEl = document.getElementById('rc-actions');
+      if (status === 'PENDING') {
+        actEl.innerHTML = '<button type="button" class="btn-approve" onclick="window.handleAction(\'' + orderId + '\', \'approve\', this)">✅ Approve Order</button>' +
+                          '<button type="button" class="btn-reject" onclick="window.handleAction(\'' + orderId + '\', \'reject\', this)">❌ Reject</button>';
+      } else {
+        actEl.innerHTML = '<button type="button" class="btn btn-secondary" onclick="closeReceiptModal()">Close</button>';
+      }
+      document.getElementById('receipt-overlay').style.display = 'flex';
+    };
+
+    window.closeReceiptModal = function () {
+      var el = document.getElementById('receipt-overlay');
+      if (el) el.style.display = 'none';
+      var img = document.getElementById('rc-img');
+      if (img) img.src = '';
+    };
+
+    // Auto-refresh every 12 seconds if not currently acting
+    setInterval(function () {
+      if (!isProcessing) loadOrders();
+    }, 12000);
+
+    checkAuth();
+  })();
+</script>
+
+</body>
+</html>

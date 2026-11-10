@@ -1,0 +1,237 @@
+{
+  "adminKey": "aag_super_secret_admin_key_2026",
+  "claimMinSeconds": 5,
+  "codeTtlMinutes": 1440,
+  "upi": {
+    "vpa": "6295282909@fam",
+    "name": "AAG SMP",
+    "fampayQrImage": "images/fampay-qr.jpg",
+    "discordWebhook": ""
+  },
+  "packages": {
+    "7446855": {
+      "id": "7446855",
+      "name": "400 Shards",
+      "price": 29,
+      "label": "400 Shards",
+      "commands": [
+        "addshards {player} 400"
+      ]
+    },
+    "7446857": {
+      "id": "7446857",
+      "name": "2,500 Shards",
+      "price": 99,
+      "label": "2,500 Shards",
+      "commands": [
+        "addshards {player} 2500"
+      ]
+    },
+    "7446858": {
+      "id": "7446858",
+      "name": "5,500 Shards",
+      "price": 199,
+      "label": "5,500 Shards",
+      "commands": [
+        "addshards {player} 5500"
+      ]
+    },
+    "7446861": {
+      "id": "7446861",
+      "name": "12,000 Shards",
+      "price": 399,
+      "label": "12,000 Shards",
+      "commands": [
+        "addshards {player} 12000"
+      ]
+    },
+    "7446862": {
+      "id": "7446862",
+      "name": "32,000 Shards",
+      "price": 999,
+      "label": "32,000 Shards",
+      "commands": [
+        "addshards {player} 32000"
+      ]
+    },
+    "7446865": {
+      "id": "7446865",
+      "name": "70,000 Shards",
+      "price": 1999,
+      "label": "70,000 Shards",
+      "commands": [
+        "addshards {player} 70000"
+      ]
+    },
+    "5999412": {
+      "id": "5999412",
+      "name": "VIP Rank",
+      "price": 99,
+      "label": "VIP Rank (30 Days)",
+      "commands": [
+        "lp user {player} parent addtemp vip 30d accumulate",
+        "addshards {player} 500"
+      ]
+    },
+    "7446586": {
+      "id": "7446586",
+      "name": "MVP Rank",
+      "price": 199,
+      "label": "MVP Rank (30 Days)",
+      "commands": [
+        "lp user {player} parent addtemp mvp 30d accumulate",
+        "addshards {player} 1500"
+      ]
+    },
+    "7706179": {
+      "id": "7706179",
+      "name": "ELITE Rank",
+      "price": 499,
+      "label": "ELITE Rank (30 Days)",
+      "commands": [
+        "lp user {player} parent addtemp elite 30d accumulate",
+        "addshards {player} 5000"
+      ]
+    },
+    "810000": {
+      "id": "810000",
+      "name": "Common Crate Key",
+      "price": 9,
+      "label": "1x Common Crate Key",
+      "commands": [
+        "crate key {player} common 1"
+      ]
+    },
+    "810001": {
+      "id": "810001",
+      "name": "Prime Crate Key",
+      "price": 19,
+      "label": "1x Prime Crate Key",
+      "commands": [
+        "crate key {player} prime 1"
+      ]
+    },
+    "810002": {
+      "id": "810002",
+      "name": "Crimson Crate Key",
+      "price": 39,
+      "label": "1x Crimson Crate Key",
+      "commands": [
+        "crate key {player} crimson 1"
+      ]
+    },
+    "810003": {
+      "id": "810003",
+      "name": "Gold Crate Key",
+      "price": 69,
+      "label": "1x Gold Crate Key",
+      "commands": [
+        "crate key {player} gold 1"
+      ]
+    },
+    "810004": {
+      "id": "810004",
+      "name": "All 4 Keys Mega Pack",
+      "price": 119,
+      "label": "1x Common + 1x Prime + 1x Crimson + 1x Gold Key",
+      "commands": [
+        "crate key {player} common 1",
+        "crate key {player} prime 1",
+        "crate key {player} crimson 1",
+        "crate key {player} gold 1"
+      ]
+    }
+  },
+  "linkvertise": {
+    "enabled": false,
+    "userId": "1291746"
+  },
+  "linksMaintenance": true,
+  "arolinks": {
+    "enabled": false,
+    "apiToken": "49e7f9a4bca1ad2689eee7671f4b4e529758ef38",
+    "publicBaseUrl": "https://store.aagmc.fun"
+  },
+  "vplink": {
+    "enabled": false,
+    "apiToken": "a904011726b39feb12fb1baff9a60f43c6a7b2b2",
+    "publicBaseUrl": "https://store.aagmc.fun"
+  },
+  "monetag": {
+    "enabled": true,
+    "directLink": "https://uplcm.com/4/12213645"
+  },
+  "gplinks": {
+    "enabled": false,
+    "apiToken": "47a2ddece07aea75d0e22b25f8f9a4e3560a3239",
+    "publicBaseUrl": "https://store.aagmc.fun"
+  },
+  "shrinkme": {
+    "enabled": false,
+    "apiToken": "",
+    "publicBaseUrl": "https://store.aagmc.fun"
+  },
+  "adsterra": {
+    "enabled": true,
+    "directLink": "https://uplcm.com/4/12213645"
+  },
+  "afk": {
+    "enabled": true,
+    "rewardLabel": "1x AFK Shard",
+    "rewardCommand": "addshards {player} 1"
+  },
+  "links": {
+    "link1": {
+      "title": "Code Link 1 (Easy)",
+      "steps": 1,
+      "provider": "none",
+      "shortenerUrl": "",
+      "cooldownMinutes": 1440,
+      "reward": {
+        "label": "5x Shards",
+        "commands": [
+          "addshards {player} 5"
+        ]
+      }
+    },
+    "link2": {
+      "title": "Code Link 2 (Easy)",
+      "steps": 2,
+      "provider": "none",
+      "shortenerUrl": "",
+      "cooldownMinutes": 1440,
+      "reward": {
+        "label": "10x Shards",
+        "commands": [
+          "addshards {player} 10"
+        ]
+      }
+    },
+    "link3": {
+      "title": "Code Link 3 (Advanced)",
+      "steps": 3,
+      "provider": "none",
+      "shortenerUrl": "",
+      "cooldownMinutes": 1440,
+      "reward": {
+        "label": "20x Shards",
+        "commands": [
+          "addshards {player} 20"
+        ]
+      }
+    },
+    "link4": {
+      "title": "Code Link 4 (Boss Reward)",
+      "steps": 4,
+      "provider": "none",
+      "shortenerUrl": "",
+      "cooldownMinutes": 1440,
+      "reward": {
+        "label": "50x Shards",
+        "commands": [
+          "addshards {player} 50"
+        ]
+      }
+    }
+  }
+}

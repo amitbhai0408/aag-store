@@ -1,0 +1,12 @@
+{
+  "name": "aag-smp-store",
+  "version": "1.0.0",
+  "description": "AAG SMP Store & Rewards API",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "keywords": [],
+  "author": "AAG SMP",
+  "license": "ISC"
+}

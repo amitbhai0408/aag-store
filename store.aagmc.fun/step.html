@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAG SMP | Step Progress</title>
+<link rel="shortcut icon" href="../website.aagmc.fun/bcGCsev.png">
+<link rel="stylesheet" href="rewards.css">
+<style>
+  .progress-bar-wrap {
+    width: 100%;
+    height: 14px;
+    background: #222;
+    border-radius: 999px;
+    margin: 18px 0 24px;
+    overflow: hidden;
+    border: 1px solid #333;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0a6cff, #00F0FF);
+    border-radius: 999px;
+    transition: width 0.5s ease;
+  }
+  .step-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(10, 108, 255, 0.15);
+    color: #00F0FF;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+  }
+  .action-wrap {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-next {
+    width: 100%;
+    max-width: 360px;
+    height: 52px;
+    font-size: 17px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn-next:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+</style>
+<script src="config.js"></script>
+<script src="login.js"></script>
+<script src="ads.js" defer></script>
+<script>AAG.requireLogin();</script>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <a class="chip" href="/"><img src="../website.aagmc.fun/logo.png" alt="AAG MC"></a>
+    <a class="pill" href="free-redeem-codes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Free Redeem Codes</a>
+  </div>
+
+  <div class="banner">
+    <div class="txt">
+      <h1 id="step-title">Great Job! Step Complete</h1>
+      <p id="step-sub">Complete the next verification step to unlock your Shards reward.</p>
+    </div>
+    <img src="../website.aagmc.fun/codes.png" alt="">
+  </div>
+
+  <div class="cols">
+    <div>
+      <div class="card" id="step-card">
+        <span class="step-badge" id="step-badge">Step in Progress</span>
+        <h2 id="step-header" style="margin:0 0 6px; font-size:24px;">Verifying Progress...</h2>
+        <p style="color:#aaa; font-size:14px; margin:0;" id="step-desc">Please wait while we check your step verification.</p>
+
+        <div class="progress-bar-wrap">
+          <div class="progress-fill" id="progress-bar" style="width: 20%;"></div>
+        </div>
+
+        <div class="status-line" id="step-status" style="margin-bottom:12px;">Checking your verification...</div>
+
+        <div class="action-wrap">
+          <button class="btn btn-next" id="btn-next" type="button" style="display:none;">
+            <span id="btn-text">Continue to Next Step</span>
+            <svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <small id="wait-note" style="color:#777; font-size:12px;"></small>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card help">
+        <h3>How it works</h3>
+        <p>Higher reward tiers require passing multiple ad steps. Once you finish all steps, you will instantly receive your redeem code!</p>
+        <a class="btn" href="free-redeem-codes" style="background:#222;">Cancel & Back</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ad Slots for maximum revenue -->
+  <div style="margin-top:24px;">
+    <div class="ad-slot ad-banner" data-ad="bottom"><span>Ad space &middot; 728 &times; 90</span></div>
+  </div>
+</div>
+
+<aside class="rail rail-l"><div class="ad-slot ad-sky" data-ad="rail-left"><span>Ad space<br>160 &times; 600</span></div></aside>
+<aside class="rail rail-r"><div class="ad-slot ad-sky" data-ad="rail-right"><span>Ad space<br>160 &times; 600</span></div></aside>
+<footer>aagmc.fun &middot; Not associated with Mojang or Microsoft</footer>
+
+<script>
+(function () {
+  var urlParams = new URLSearchParams(location.search);
+  var sessionToken = urlParams.get('s') || sessionStorage.getItem('aag_session_token') || localStorage.getItem('aag_session_token') || '';
+  var stepParam = parseInt(urlParams.get('step') || '1', 10);
+
+  if (sessionToken) {
+    try {
+      sessionStorage.setItem('aag_session_token', sessionToken);
+      localStorage.setItem('aag_session_token', sessionToken);
+    } catch (e) {}
+  }
+
+  var u = AAG.getUser();
+  var st = document.getElementById('step-status');
+  var header = document.getElementById('step-header');
+  var desc = document.getElementById('step-desc');
+  var badge = document.getElementById('step-badge');
+  var bar = document.getElementById('progress-bar');
+  var btn = document.getElementById('btn-next');
+  var btnText = document.getElementById('btn-text');
+  var waitNote = document.getElementById('wait-note');
+
+  if (!sessionToken || !u) {
+    st.className = 'status-line err';
+    st.textContent = '❌ Invalid or expired session. Please start from the Free Redeem Codes page.';
+    header.textContent = 'Session Expired';
+    badge.textContent = 'Error';
+    return;
+  }
+
+  function verifyStep() {
+    st.className = 'status-line';
+    st.textContent = 'Verifying step with server...';
+
+    AAG.api('/api/link/step-verify', {
+      name: u.name,
+      edition: u.edition,
+      sessionToken: sessionToken,
+      step: stepParam
+    }, 10000).then(function (res) {
+      if (!res) {
+        st.className = 'status-line err';
+        st.textContent = 'Could not reach server. Please refresh this page.';
+        return;
+      }
+
+      if (res.waitSeconds) {
+        st.className = 'status-line';
+        st.textContent = 'Please wait ' + res.waitSeconds + 's to complete verification...';
+        setTimeout(verifyStep, (res.waitSeconds + 1) * 1000);
+        return;
+      }
+
+      if (!res.ok) {
+        st.className = 'status-line err';
+        st.textContent = res.error || 'Verification failed.';
+        return;
+      }
+
+      // Step verified!
+      var totalSteps = res.totalSteps || (stepParam + 1);
+      var nextStep = res.nextStep || (stepParam + 1);
+      var percent = Math.min(100, Math.round((stepParam / totalSteps) * 100));
+
+      badge.textContent = 'Step ' + stepParam + ' of ' + totalSteps + ' Complete';
+      header.textContent = '🎉 Step ' + stepParam + ' Verified!';
+      desc.textContent = 'You completed step ' + stepParam + '. Click below to proceed to step ' + nextStep + ' (' + res.rewardLabel + ').';
+      bar.style.width = percent + '%';
+      st.className = 'status-line ok';
+      st.textContent = '✔ Verification complete!';
+
+      btn.style.display = 'inline-flex';
+      btnText.textContent = nextStep === totalSteps ? 'Proceed to Final Step (' + totalSteps + '/' + totalSteps + ')' : 'Continue to Step ' + nextStep;
+
+      btn.onclick = function () {
+        btn.disabled = true;
+        btnText.textContent = 'Opening step ' + nextStep + '...';
+
+        var dl = res.directLink;
+        if (dl) {
+          try {
+            window.open(dl, '_blank');
+          } catch (e) {}
+        }
+
+        var target = res.nextShortUrl || res.nextDestUrl;
+        if (target) {
+          window.location.href = target;
+        } else {
+          alert('Could not generate next step link. Please try again.');
+          btn.disabled = false;
+        }
+      };
+    });
+  }
+
+  verifyStep();
+})();
+</script>
+</body>
+</html>
